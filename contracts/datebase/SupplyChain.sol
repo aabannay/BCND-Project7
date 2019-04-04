@@ -10,7 +10,7 @@ import "../datecore/Ownable.sol";
 contract SupplyChain is FarmerRole, DistributorRole, RetailerRole, ConsumerRole, Ownable {
 
   // Define 'owner'
-  address owner;
+  //address private owner; //no need to define it since it is already defined in ownable
 
   // Define a variable called 'upc' for Universal Product Code (UPC)
   uint  upc;
@@ -71,7 +71,7 @@ contract SupplyChain is FarmerRole, DistributorRole, RetailerRole, ConsumerRole,
 
   // Define a modifer that checks to see if msg.sender == owner of the contract
   modifier onlyOwner() {
-    require(msg.sender == owner);
+    require(msg.sender == owner());
     _;
   }
 
@@ -147,15 +147,15 @@ contract SupplyChain is FarmerRole, DistributorRole, RetailerRole, ConsumerRole,
   // and set 'sku' to 1
   // and set 'upc' to 1
   constructor() public payable {
-    owner = msg.sender;
+    //owner = owner();
     sku = 1;
     upc = 1;
   }
 
   // Define a function 'kill' if required
   function kill() public {
-    if (msg.sender == owner) {
-      selfdestruct(owner);
+    if (msg.sender == owner()) {
+      selfdestruct(msg.sender);
     }
   }
 
@@ -175,8 +175,13 @@ contract SupplyChain is FarmerRole, DistributorRole, RetailerRole, ConsumerRole,
                         originFarmInformation: _originFarmInformation,
                         originFarmLatitude: _originFarmLatitude,
                         originFarmLongitude: _originFarmLongitude,
+                        productID: 0,
                         productNotes: _productNotes,
-                        itemState: State.Harvested});
+                        productPrice: 0, 
+                        itemState: State.Harvested,
+                        distributorID: address(0),
+                        retailerID: address(0),
+                        consumerID: address(0)});
 
     //update SKU Counter
     sku = sku + 1;
@@ -286,7 +291,7 @@ contract SupplyChain is FarmerRole, DistributorRole, RetailerRole, ConsumerRole,
   // Use the above modifiers to check if the item is received
   function purchaseItem(uint _upc) public 
     // Call modifier to check if upc has passed previous supply chain stage
-    recieved(_upc)
+    received(_upc)
     onlyConsumer()
     // Access Control List enforced by calling Smart Contract / DApp
     {
@@ -318,7 +323,7 @@ contract SupplyChain is FarmerRole, DistributorRole, RetailerRole, ConsumerRole,
   originFarmerID = items[_upc].originFarmerID;
   originFarmName = items[_upc].originFarmName;
   originFarmInformation = items[_upc].originFarmInformation;
-  originFarmLatitude = items[_upc]._originFarmLatitude;
+  originFarmLatitude = items[_upc].originFarmLatitude;
   originFarmLongitude = items[_upc].originFarmLongitude;
     
   return 
@@ -353,7 +358,7 @@ contract SupplyChain is FarmerRole, DistributorRole, RetailerRole, ConsumerRole,
   itemUPC = items[_upc].upc;
   productID = items[_upc].productID;
   productNotes = items[_upc].productNotes;
-  itemState = items[_upc].itemState;
+  itemState = uint(items[_upc].itemState);
   distributorID = items[_upc].distributorID;
   retailerID = items[_upc].retailerID;
   consumerID = items[_upc].consumerID;
