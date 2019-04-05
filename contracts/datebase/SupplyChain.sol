@@ -220,7 +220,7 @@ contract SupplyChain is FarmerRole, DistributorRole, RetailerRole, ConsumerRole,
   // Define a function 'sellItem' that allows a farmer to mark an item 'ForSale'
   function sellItem(uint _upc, uint _price) public 
   // Call modifier to check if upc has passed previous supply chain stage
-  processed(_upc)
+  packed(_upc)
   onlyFarmer()
   // Call modifier to verify caller of this function
   verifyCaller(items[_upc].originFarmerID)
@@ -358,6 +358,7 @@ contract SupplyChain is FarmerRole, DistributorRole, RetailerRole, ConsumerRole,
   itemUPC = items[_upc].upc;
   productID = items[_upc].productID;
   productNotes = items[_upc].productNotes;
+  productPrice = items[_upc].productPrice;
   itemState = uint(items[_upc].itemState);
   distributorID = items[_upc].distributorID;
   retailerID = items[_upc].retailerID;
