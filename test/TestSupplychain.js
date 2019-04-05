@@ -51,14 +51,16 @@ contract('SupplyChain', function(accounts) {
         //add farmer role to account 1
         await supplyChain.addFarmer(accounts[1])
 
-        // Mark an item as Harvested by calling function harvestItem()
-        await supplyChain.harvestItem(upc, originFarmerID, originFarmName, originFarmInformation, originFarmLatitude, originFarmLongitude, productNotes, {from: accounts[1]})
-
         // Watch the emitted event Harvested()
         var event = supplyChain.Harvested()
         await event.watch((err, res) => {
             eventEmitted = true
         })
+
+        // Mark an item as Harvested by calling function harvestItem()
+        await supplyChain.harvestItem(upc, originFarmerID, originFarmName, originFarmInformation, originFarmLatitude, originFarmLongitude, productNotes, {from: accounts[1]})
+
+        
 
         // Retrieve the just now saved item from blockchain by calling function fetchItem()
         const resultBufferOne = await supplyChain.fetchItemBufferOne.call(upc)
@@ -109,19 +111,25 @@ contract('SupplyChain', function(accounts) {
         const supplyChain = await SupplyChain.deployed()
         
         // Declare and Initialize a variable for event
-        
+        var eventEmitted = false
         
         // Watch the emitted event Packed()
-        
+        var event = supplyChain.Packed()
+        await event.watch((err, res) => {
+            eventEmitted = true
+        })
 
         // Mark an item as Packed by calling function packItem()
-        
+        await supplyChain.packItem(1, {from: accounts[1]})
 
         // Retrieve the just now saved item from blockchain by calling function fetchItem()
-        
+        const resultBufferOne = await supplyChain.fetchItemBufferOne.call(upc)
+        const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc)
 
         // Verify the result set
-        
+        assert.equal(resultBufferOne[0], sku, 'Error: Invalid item SKU')
+        assert.equal(resultBufferTwo[5], 2, 'Error: Invalid item State')
+        assert.equal(eventEmitted, true, 'Invalid event emitted')
     })    
 
     // 4th Test
