@@ -30,23 +30,23 @@ contract ConsumerRole {
 
   // Define a function 'addConsumer' that adds this role
   function addConsumer(address account) public onlyConsumer {
-    return _addConsumer(account);
+     _addConsumer(account);
   }
 
   // Define a function 'renounceConsumer' to renounce this role
   function renounceConsumer() public {
-    return _removeConsumer(msg.sender);
+     _removeConsumer(msg.sender);
   }
 
   // Define an internal function '_addConsumer' to add this role, called by 'addConsumer'
   function _addConsumer(address account) internal {
-    return consumers.add(account);
+    consumers.add(account);
     emit ConsumerAdded(account);
   }
 
   // Define an internal function '_removeConsumer' to remove this role, called by 'removeConsumer'
   function _removeConsumer(address account) internal {
-    return consumers.remove(account);
+    consumers.remove(account);
     emit ConsumerRemoved(account);
   }
 }

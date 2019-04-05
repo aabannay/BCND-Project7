@@ -32,12 +32,12 @@ contract RetailerRole {
 
   // Define a function 'addRetailer' that adds this role
   function addRetailer(address account) public onlyRetailer {
-    return _addRetailer(account);
+     _addRetailer(account);
   }
 
   // Define a function 'renounceRetailer' to renounce this role
   function renounceRetailer() public {
-    return _removeRetailer(msg.sender);
+     _removeRetailer(msg.sender);
   }
 
   // Define an internal function '_addRetailer' to add this role, called by 'addRetailer'

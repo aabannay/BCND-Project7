@@ -133,7 +133,7 @@ contract SupplyChain is FarmerRole, DistributorRole, RetailerRole, ConsumerRole,
 
   // Define a modifier that checks if an item.state of a upc is Received
   modifier received(uint _upc) {
-    require(items[_upc].itemState == State.Shipped);
+    require(items[_upc].itemState == State.Received);
     _;
   }
 
